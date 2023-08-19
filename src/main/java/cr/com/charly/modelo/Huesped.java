@@ -28,6 +28,10 @@ public class Huesped {
         this.telefono = telefono;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public Integer getId() {
         return id;
     }
@@ -87,4 +91,6 @@ public class Huesped {
         r.append(this.telefono);
         return r.toString();
     }
+
+
 }
