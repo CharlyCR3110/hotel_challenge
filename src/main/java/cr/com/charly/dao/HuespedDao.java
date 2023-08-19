@@ -9,7 +9,7 @@ public class HuespedDao {
     public HuespedDao(Connection connection) {
         this.connection = connection;
     }
-    
+
     public boolean tieneDuplicados(Huesped huesped) {
         boolean r = false;
         // Consulta SQL para verificar si existe un huesped con el mismo nombre y apellido, count() retorna el número de filas que coinciden con el nombre y apellido del huesped
@@ -40,5 +40,53 @@ public class HuespedDao {
 
         // Retornar el resultado
         return r;
+    }
+
+    public void guardar(Huesped huesped) {
+        // Comprobar si el huesped ya existe
+        if (tieneDuplicados(huesped)) {
+            // Imprimir en consola que el huesped ya existe (debug)
+            System.out.println("El huésped ya existe.");
+            // Retornar para no guardar el huesped
+            // TO-DO mostrar un frame con un avisando que el huesped ya existe y que por ende no ende no es necesario guardarlo
+            return;
+        }
+
+        // Imprimir en consola el huesped que se va a guardar (debug)
+        System.out.println("Guardando el huesped " + huesped.toString());
+
+        // Consulta SQL para insertar un huesped
+        String query = "INSERT INTO huespedes (nombre, apellido, fecha_nacimiento, nacionalidad, telefono) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            // Setear los valores del huesped en la consulta SQL
+            statement.setString(1, huesped.getNombre());
+            statement.setString(2, huesped.getApellido());
+            statement.setDate(3, java.sql.Date.valueOf(huesped.getFechaNacimiento()));
+            statement.setString(4, huesped.getNacionalidad());
+            statement.setString(5, huesped.getTelefono());
+
+            // Ejectuar la consulta SQL y obtener el número de filas afectadas
+            int rowsAffected = statement.executeUpdate();
+
+            // Si se insertó el huesped, obtener el id generado
+            if (rowsAffected == 1) {
+                try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                    // Si se obtuvo el id generado, setearlo en el huesped
+                    while (resultSet.next()) {
+                        // Setear el id generado en el huesped
+                        huesped.setId(resultSet.getInt(1));
+                        // Imprimir en consola el huesped que se insertó (debug)
+                        System.out.println(String.format("Fue insertado el huesped: %s", huesped));
+                    }
+                }
+            } else {
+                // Imprimir en consola que no se pudo insertar el huesped (debug)
+                System.out.println("No se pudo insertar el huésped.");
+            }
+        } catch (SQLException e) {
+            // Lanzar una excepción en caso de que ocurra un error
+            throw new RuntimeException(e);
+        }
     }
 }
