@@ -14,8 +14,8 @@ public class HuespedController {
         this.huespedDao = new HuespedDao(factory.recuperarConexion());
     }
 
-    public void guardar(Huesped huesped) {
-        this.huespedDao.guardar(huesped);
+    public int guardar(Huesped huesped) {
+        return this.huespedDao.guardar(huesped);
     }
 
     public List<Huesped> listar() {
