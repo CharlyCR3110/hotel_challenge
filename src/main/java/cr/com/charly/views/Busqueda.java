@@ -265,6 +265,32 @@ public class Busqueda extends JFrame {
 		lblEditar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblEditar.setBounds(0, 0, 122, 35);
 		btnEditar.add(lblEditar);
+
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// mostrar en que ventana estamos, si en huespedes o reservas
+				if (panel.getTitleAt(panel.getSelectedIndex()) == "Huéspedes") {
+					System.out.println("Estamos en la pestaña de huespedes");	// debug
+
+					// Obtener el id del huesped seleccionado
+					int id = (int) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 0);
+					System.out.println("Se seleccionó el huesped con id " + id);	// debug
+
+					// Obtener los datos
+					String nombre = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 1);
+					String apellido = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 2);
+					String fechaNacimiento = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 3);
+					String nacionalidad = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 4);
+					String telefono = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 5);
+
+					huespedController.modificar(nombre, apellido, LocalDate.parse(fechaNacimiento), nacionalidad, telefono, id);
+				} else {
+					System.out.println("Estamos en la pestaña de reservas");	// debug
+					// TO-DO abrir la ventana de edición de reservas
+				}
+			}
+		});
 		
 		JPanel btnEliminar = new JPanel();
 		btnEliminar.setLayout(null);
