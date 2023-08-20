@@ -22,6 +22,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.time.LocalDate;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -279,6 +280,29 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
+
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// mostrar en que ventana estamos, si en huespedes o reservas
+				if (panel.getTitleAt(panel.getSelectedIndex()) == "Huéspedes") {
+					System.out.println("Estamos en la pestaña de huespedes");	// debug
+
+					// Obtener el id del huesped seleccionado
+					int id = (int) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 0);
+					System.out.println("Se seleccionó el huesped con id " + id);	// debug
+
+					// Eliminar el huesped
+					huespedController.eliminar(id);
+
+					// Cargar la tabla de huespedes
+					cargarTablaHuespedes();
+				} else {
+					System.out.println("Estamos en la pestaña de reservas");	// debug
+					// TO-DO eliminar la reserva seleccionada
+				}
+			}
+		});
 	}
 
 	private void cargarTablaHuespedes() {
