@@ -219,7 +219,23 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// mostrar en que ventana estamos, si en huespedes o reservas
+				if (panel.getTitleAt(panel.getSelectedIndex()) == "Huéspedes") {
+					System.out.println("Estamos en la pestaña de huespedes");	// debug
 
+					if (!txtBuscar.getText().isEmpty()) {
+						System.out.println("Se ingresó el nombre " + txtBuscar.getText());	// debug
+						// cargar los huespedes filtrados
+						cargarTablaHuespedesFiltrados();
+					} else {
+						System.out.println("No se ingresó un nombre");	// debug
+						// cargar la tabla de huespedes
+						cargarTablaHuespedes();
+					}
+				} else {
+					System.out.println("Estamos en la pestaña de reservas");	// debug
+					// TO-DO cargar las reservas filtradas
+				}
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -268,10 +284,29 @@ public class Busqueda extends JFrame {
 	private void cargarTablaHuespedes() {
 		var huespedes = this.huespedController.listar();
 
+		// Limpiar la tabla
+		modeloHuesped.setRowCount(0);
+		// Agregar los huespedes a la tabla
 		huespedes.forEach(huesped -> {
 			modeloHuesped.addRow(new Object[] { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
 					huesped.getFechaNacimiento(), huesped.getNacionalidad(), huesped.getTelefono()});
 		});
+	}
+
+	private void cargarTablaHuespedesFiltrados() {
+		// Tomar el texto del campo de texto
+		String apellido = txtBuscar.getText();
+		// buscar los huespedes por apellido
+		var huespedes = this.huespedController.listarPorApellido(apellido);
+
+		// Limpiar la tabla
+		modeloHuesped.setRowCount(0);
+		// Agregar los huespedes a la tabla
+		huespedes.forEach(huesped -> {
+			modeloHuesped.addRow(new Object[] { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
+					huesped.getFechaNacimiento(), huesped.getNacionalidad(), huesped.getTelefono()});
+		});
+
 	}
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
