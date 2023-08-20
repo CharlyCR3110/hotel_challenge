@@ -149,4 +149,39 @@ public class HuespedDao {
             throw new RuntimeException(e);
         }
     }
+
+    public List<Huesped> listarPorApellido(String apellido) {
+        // Consulta SQL para listar los huespedes
+        String query = "SELECT * FROM huespedes WHERE apellido = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Settear los valor del apellido en la consulta SQL
+            statement.setString(1, apellido);
+
+            // Ejectuar la consulta SQL y obtener el resultado
+            try (ResultSet resultSet = statement.executeQuery()) {
+                // Si se obtuvo un resultado, agregar los huespedes a la lista
+                List<Huesped> r = new ArrayList<>();
+                while (resultSet.next()) {
+                    // Obtener los valores del huesped
+                    int id = resultSet.getInt("id");
+                    String nombre = resultSet.getString("nombre");
+                    String apellido2 = resultSet.getString("apellido");
+                    Date fechaNacimiento = resultSet.getDate("fecha_nacimiento");
+                    String nacionalidad = resultSet.getString("nacionalidad");
+                    String telefono = resultSet.getString("telefono");
+
+                    // Crear un nuevo huesped con los valores obtenidos
+                    Huesped huesped = new Huesped(id, nombre, apellido2, fechaNacimiento.toLocalDate(), nacionalidad, telefono);
+
+                    // Agregar el huesped a la lista
+                    r.add(huesped);
+                }
+                // Retornar el resultado
+                return r;
+            }
+        } catch (SQLException e) {
+            // Lanzar una excepción en caso de que ocurra un error
+            throw new RuntimeException(e);
+        }
+    }
 }
