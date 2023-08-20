@@ -1,25 +1,20 @@
 package cr.com.charly.views;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import java.awt.Color;
+
 import com.toedter.calendar.JDateChooser;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.ImageIcon;
-import java.awt.SystemColor;
+import cr.com.charly.controller.HuespedController;
+import cr.com.charly.modelo.Huesped;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.Format;
-import java.awt.Toolkit;
-import javax.swing.SwingConstants;
-import javax.swing.JSeparator;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
@@ -28,7 +23,7 @@ public class RegistroHuesped extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
-	private JTextField txtNreserva;
+	private JTextField txtMopcional;
 	private JDateChooser txtFechaN;
 	private JComboBox<Format> txtNacionalidad;
 	private JLabel labelExit;
@@ -125,7 +120,7 @@ public class RegistroHuesped extends JFrame {
 		txtNombre.setBounds(560, 135, 285, 33);
 		txtNombre.setBackground(Color.WHITE);
 		txtNombre.setColumns(10);
-		txtNombre.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		txtNombre.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(txtNombre);
 		
 		txtApellido = new JTextField();
@@ -133,7 +128,7 @@ public class RegistroHuesped extends JFrame {
 		txtApellido.setBounds(560, 204, 285, 33);
 		txtApellido.setColumns(10);
 		txtApellido.setBackground(Color.WHITE);
-		txtApellido.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		txtApellido.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(txtApellido);
 		
 		txtFechaN = new JDateChooser();
@@ -185,7 +180,7 @@ public class RegistroHuesped extends JFrame {
 		txtTelefono.setBounds(560, 424, 285, 33);
 		txtTelefono.setColumns(10);
 		txtTelefono.setBackground(Color.WHITE);
-		txtTelefono.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		txtTelefono.setBorder(BorderFactory.createEmptyBorder());
 		contentPane.add(txtTelefono);
 		
 		JLabel lblTitulo = new JLabel("REGISTRO HUÉSPED");
@@ -193,21 +188,7 @@ public class RegistroHuesped extends JFrame {
 		lblTitulo.setForeground(new Color(12, 138, 199));
 		lblTitulo.setFont(new Font("Roboto Black", Font.PLAIN, 23));
 		contentPane.add(lblTitulo);
-		
-		JLabel lblNumeroReserva = new JLabel("NÚMERO DE RESERVA");
-		lblNumeroReserva.setBounds(560, 474, 253, 14);
-		lblNumeroReserva.setForeground(SystemColor.textInactiveText);
-		lblNumeroReserva.setFont(new Font("Roboto Black", Font.PLAIN, 18));
-		contentPane.add(lblNumeroReserva);
-		
-		txtNreserva = new JTextField();
-		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtNreserva.setBounds(560, 495, 285, 33);
-		txtNreserva.setColumns(10);
-		txtNreserva.setBackground(Color.WHITE);
-		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		contentPane.add(txtNreserva);
-		
+
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setBounds(560, 170, 289, 2);
 		separator_1_2.setForeground(new Color(12, 138, 199));
@@ -237,24 +218,55 @@ public class RegistroHuesped extends JFrame {
 		separator_1_2_4.setForeground(new Color(12, 138, 199));
 		separator_1_2_4.setBackground(new Color(12, 138, 199));
 		contentPane.add(separator_1_2_4);
-		
-		JSeparator separator_1_2_5 = new JSeparator();
-		separator_1_2_5.setBounds(560, 529, 289, 2);
-		separator_1_2_5.setForeground(new Color(12, 138, 199));
-		separator_1_2_5.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2_5);
-		
+
 		JPanel btnguardar = new JPanel();
 		btnguardar.setBounds(723, 560, 122, 35);
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Obtener los datos del formulario para crear un objeto de tipo Huesped
+				String nombre = txtNombre.getText();
+				String apellido = txtApellido.getText();
+				Date fechaNacimiento = txtFechaN.getDate();
+				String telefono = txtTelefono.getText();
+				String nacionalidad = (String) txtNacionalidad.getSelectedItem();
+
+				// comprobar que los datos no estén vacíos
+
+				if (nombre.isEmpty() || apellido.isEmpty() || fechaNacimiento == null || telefono.isEmpty() || nacionalidad.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Parece que hay campos vacíos, por favor verifique");
+					return;
+				}
+
+				// Crear un objeto de tipo Huesped
+				Huesped huesped = new Huesped(nombre, apellido, fechaNacimiento.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), nacionalidad, telefono);
+
+				// Guardar el objeto en la base de datos
+				HuespedController huespedController = new HuespedController();
+				int id = huespedController.guardar(huesped);
+
+				if (id == -1) {
+					JOptionPane.showMessageDialog(null, "Parece que el huesped ya esta registrado en el sistema.\n Presione OK para continuar");
+					MenuUsuario usuario = new MenuUsuario();
+					usuario.setVisible(true);
+					dispose();
+					return;
+				}
+
+				// enviar al usuario un mensaje de confirmación
+				String mensaje = "Se ha guardado el huesped con el id: " + id + "\n Presione OK para continuar";
+				JOptionPane.showMessageDialog(null, mensaje);
+
+				// Mandarlo al menú principal
+				MenuUsuario usuario = new MenuUsuario();
+				usuario.setVisible(true);
+				dispose();
 			}
 		});
 		btnguardar.setLayout(null);
 		btnguardar.setBackground(new Color(12, 138, 199));
 		contentPane.add(btnguardar);
-		btnguardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		btnguardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		JLabel labelGuardar = new JLabel("GUARDAR");
 		labelGuardar.setHorizontalAlignment(SwingConstants.CENTER);
