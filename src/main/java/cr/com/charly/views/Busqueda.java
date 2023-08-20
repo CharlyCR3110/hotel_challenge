@@ -94,6 +94,7 @@ public class Busqueda extends JFrame {
 		tbReservas = new JTable();
 		tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbReservas.setFont(new Font("Roboto", Font.PLAIN, 16));
+		tbReservas.getTableHeader().setReorderingAllowed(false);
 		modelo = (DefaultTableModel) tbReservas.getModel();
 		modelo.addColumn("Numero de Reserva");
 		modelo.addColumn("Fecha Check In");
@@ -108,6 +109,7 @@ public class Busqueda extends JFrame {
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbHuespedes.setFont(new Font("Roboto", Font.PLAIN, 16));
+		tbHuespedes.getTableHeader().setReorderingAllowed(false);
 		modeloHuesped = (DefaultTableModel) tbHuespedes.getModel();
 		modeloHuesped.addColumn("Número de Huesped");
 		modeloHuesped.addColumn("Nombre");
