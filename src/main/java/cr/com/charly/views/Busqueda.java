@@ -117,7 +117,7 @@ public class Busqueda extends JFrame {
 //		modeloHuesped.addColumn("Número de Reserva");
 
 		// Cargar los huespedes en la tabla
-		cargarTabla();
+		cargarTablaHuespedes();
 
 		// Agregar la tabla al panel
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
@@ -265,7 +265,7 @@ public class Busqueda extends JFrame {
 		setResizable(false);
 	}
 
-	private void cargarTabla() {
+	private void cargarTablaHuespedes() {
 		var huespedes = this.huespedController.listar();
 
 		huespedes.forEach(huesped -> {
