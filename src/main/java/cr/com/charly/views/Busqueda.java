@@ -1,5 +1,7 @@
 package cr.com.charly.views;
 
+import cr.com.charly.controller.HuespedController;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -33,6 +35,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
+	private final HuespedController huespedController = new HuespedController();
 
 	/**
 	 * Launch the application.
@@ -111,7 +114,12 @@ public class Busqueda extends JFrame {
 		modeloHuesped.addColumn("Fecha de Nacimiento");
 		modeloHuesped.addColumn("Nacionalidad");
 		modeloHuesped.addColumn("Telefono");
-		modeloHuesped.addColumn("Número de Reserva");
+//		modeloHuesped.addColumn("Número de Reserva");
+
+		// Cargar los huespedes en la tabla
+		cargarTabla();
+
+		// Agregar la tabla al panel
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
@@ -256,7 +264,16 @@ public class Busqueda extends JFrame {
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
 	}
-	
+
+	private void cargarTabla() {
+		var huespedes = this.huespedController.listar();
+
+		huespedes.forEach(huesped -> {
+			modeloHuesped.addRow(new Object[] { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
+					huesped.getFechaNacimiento(), huesped.getNacionalidad(), huesped.getTelefono()});
+		});
+	}
+
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	 private void headerMousePressed(MouseEvent evt) {
 	        xMouse = evt.getX();
