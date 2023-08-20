@@ -3,6 +3,7 @@ package cr.com.charly.dao;
 import cr.com.charly.modelo.Huesped;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,6 +180,32 @@ public class HuespedDao {
                 // Retornar el resultado
                 return r;
             }
+        } catch (SQLException e) {
+            // Lanzar una excepción en caso de que ocurra un error
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int modificar(String nombre, String apellido, LocalDate fechaNacimiento, String nacionalidad, String telefono, Integer id) {
+        // Consulta SQL para modificar un huesped
+        String query = "UPDATE huespedes SET nombre = ?, apellido = ?, fecha_nacimiento = ?, nacionalidad = ?, telefono = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Setear los valores del huesped en la consulta SQL
+            statement.setString(1, nombre);
+            statement.setString(2, apellido);
+            statement.setDate(3, java.sql.Date.valueOf(fechaNacimiento));
+            statement.setString(4, nacionalidad);
+            statement.setString(5, telefono);
+            statement.setInt(6, id);
+
+            // Ejecutar la consulta SQL y obtener el número de filas afectadas
+            int rowsAffected = statement.executeUpdate();
+
+            // Imprimir en consola el número de filas afectadas (debug)
+            System.out.println(String.format("Se modificaron %d filas.", rowsAffected));
+
+            // Retornar el número de filas afectadas
+            return rowsAffected;
         } catch (SQLException e) {
             // Lanzar una excepción en caso de que ocurra un error
             throw new RuntimeException(e);
