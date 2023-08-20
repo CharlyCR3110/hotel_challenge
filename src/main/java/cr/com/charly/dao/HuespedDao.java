@@ -45,14 +45,14 @@ public class HuespedDao {
         return r;
     }
 
-    public void guardar(Huesped huesped) {
+    public int guardar(Huesped huesped) {
         // Comprobar si el huesped ya existe
         if (tieneDuplicados(huesped)) {
             // Imprimir en consola que el huesped ya existe (debug)
             System.out.println("El huésped ya existe.");
             // Retornar para no guardar el huesped
             // TO-DO mostrar un frame con un avisando que el huesped ya existe y que por ende no ende no es necesario guardarlo
-            return;
+            return -1;
         }
 
         // Imprimir en consola el huesped que se va a guardar (debug)
@@ -91,6 +91,9 @@ public class HuespedDao {
             // Lanzar una excepción en caso de que ocurra un error
             throw new RuntimeException(e);
         }
+
+        // Retornar el id generado
+        return huesped.getId();
     }
 
     public List<Huesped> listar ()  {
