@@ -83,4 +83,25 @@ public class ReservaDao {
         return r;
     }
 
+    public int eliminar(int id) {
+        // Consulta SQL para eliminar una reserva
+        String query = "DELETE FROM reservas WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Setear los valores de la reserva en la consulta SQL
+            statement.setInt(1, id);
+
+            // Ejecutar la consulta SQL y obtener el número de filas afectadas
+            int rowsAffected = statement.executeUpdate();
+
+            // Imprimir en consola el número de filas afectadas (debug)
+            System.out.println(String.format("Se eliminaron %d filas.", rowsAffected));
+
+            // Retornar el número de filas afectadas
+            return rowsAffected;
+        } catch (SQLException e) {
+            // Lanzar una excepción en caso de que ocurra un error
+            throw new RuntimeException(e);
+        }
+    }
+
 }
