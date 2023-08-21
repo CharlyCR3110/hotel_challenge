@@ -1,6 +1,7 @@
 package cr.com.charly.views;
 
 import cr.com.charly.controller.HuespedController;
+import cr.com.charly.controller.ReservaController;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -37,6 +38,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelExit;
 	int xMouse, yMouse;
 	private final HuespedController huespedController = new HuespedController();
+	private final ReservaController reservaController = new ReservaController();
 
 	/**
 	 * Launch the application.
@@ -104,7 +106,10 @@ public class Busqueda extends JFrame {
 		JScrollPane scroll_table = new JScrollPane(tbReservas);
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/imagenes/reservado.png")), scroll_table, null);
 		scroll_table.setVisible(true);
-		
+
+		// Cargar las reservas en la tabla
+		cargarTablaReservas();
+
 		
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -118,14 +123,12 @@ public class Busqueda extends JFrame {
 		modeloHuesped.addColumn("Nacionalidad");
 		modeloHuesped.addColumn("Telefono");
 //		modeloHuesped.addColumn("Número de Reserva");
-
-		// Cargar los huespedes en la tabla
-		cargarTablaHuespedes();
-
-		// Agregar la tabla al panel
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
+
+		// Cargar los huespedes en la tabla
+		cargarTablaHuespedes();
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
@@ -359,6 +362,20 @@ public class Busqueda extends JFrame {
 					huesped.getFechaNacimiento(), huesped.getNacionalidad(), huesped.getTelefono()});
 		});
 
+	}
+
+	// Reserva
+	private void cargarTablaReservas() {
+		var reservas = this.reservaController.listar();
+
+		// limpiar la tabla
+		modelo.setRowCount(0);
+
+		//agregar las reservas a la tabla
+		reservas.forEach(reserva -> {
+			modelo.addRow(new Object[] { reserva.getId(), reserva.getFechaIngreso(), reserva.getFechaEgreso(),
+					reserva.getValorTotal(), reserva.getMetodoPago()});
+		});
 	}
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
