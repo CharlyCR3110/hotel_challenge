@@ -240,7 +240,15 @@ public class Busqueda extends JFrame {
 					}
 				} else {
 					System.out.println("Estamos en la pestaña de reservas");	// debug
-					// TO-DO cargar las reservas filtradas
+					if (!txtBuscar.getText().isEmpty()) {
+						System.out.println("Se ingresó el id " + txtBuscar.getText());	// debug
+						// cargar las reservas filtradas
+						cargarTablaReservasFiltrados();
+					} else {
+						System.out.println("No se ingresó un id");	// debug
+						// cargar la tabla de reservas
+						cargarTablaReservas();
+					}
 				}
 			}
 		});
@@ -372,6 +380,20 @@ public class Busqueda extends JFrame {
 		modelo.setRowCount(0);
 
 		//agregar las reservas a la tabla
+		reservas.forEach(reserva -> {
+			modelo.addRow(new Object[] { reserva.getId(), reserva.getFechaIngreso(), reserva.getFechaEgreso(),
+					reserva.getValorTotal(), reserva.getMetodoPago()});
+		});
+	}
+
+	private void cargarTablaReservasFiltrados() {
+		int id = Integer.parseInt(txtBuscar.getText());
+		var reservas = this.reservaController.listarPorHuespedId(id);
+
+		// Limpiar la tabla
+		modelo.setRowCount(0);
+
+		// Agregar las reservas a la tabla
 		reservas.forEach(reserva -> {
 			modelo.addRow(new Object[] { reserva.getId(), reserva.getFechaIngreso(), reserva.getFechaEgreso(),
 					reserva.getValorTotal(), reserva.getMetodoPago()});
