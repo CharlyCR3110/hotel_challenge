@@ -3,6 +3,7 @@ package cr.com.charly.dao;
 import cr.com.charly.modelo.Reserva;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,6 +138,33 @@ public class ReservaDao {
         }
 
         return r;
+    }
+
+    public int modificar(LocalDate fechaIngreso, LocalDate fechaEgreso, String formaDePago, int id) {
+        String query = "UPDATE reservas SET fecha_ingreso = ?, fecha_egreso = ?, valor_total = ?,metodo_pago = ? WHERE id = ?";
+        // se debe de recalcular el valor total de la reserva
+        int tarifaPorNoche = 100;
+        int dias = fechaEgreso.getDayOfYear() - fechaIngreso.getDayOfYear();
+        double valorTotal = dias * tarifaPorNoche;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Settear los valores de la reserva en la consulta SQL
+            statement.setDate(1, java.sql.Date.valueOf(fechaIngreso));
+            statement.setDate(2, java.sql.Date.valueOf(fechaEgreso));
+            statement.setDouble(3, valorTotal);
+            statement.setString(4, formaDePago);
+            statement.setInt(5, id);    // => where id
+
+            // ejecutar la consulta y obtener el numero de filas afectadas
+            int rowsAffected = statement.executeUpdate();
+
+            // Imprimir en consola el número de filas afectadas (debug)
+            System.out.println(String.format("Se modificaron %d filas.", rowsAffected));
+
+            return rowsAffected;
+        } catch (SQLException e) {
+            // Lanzar una excepción en caso de que ocurra un error
+            throw new RuntimeException(e);
+        }
     }
 
 }
