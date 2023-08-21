@@ -104,4 +104,39 @@ public class ReservaDao {
         }
     }
 
+    public List<Reserva> listarPorHuespedId(int huespedId) {
+        List<Reserva> r = new ArrayList<>();
+
+        // Consulta SQL para listar las reservas
+        String query = "SELECT * FROM reservas WHERE huesped_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            // Setear los valores de la reserva en la consulta SQL
+            statement.setInt(1, huespedId);
+
+            // Ejecutar la consulta SQL y obtener el resultado
+            try (ResultSet resultSet = statement.executeQuery()) {
+                // Si se obtuvo un resultado, agregar las reservas a la lista
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    Date fechaIngreso = resultSet.getDate("fecha_ingreso");
+                    Date fechaEgreso = resultSet.getDate("fecha_egreso");
+                    Double valorTotal = resultSet.getDouble("valor_total");
+                    String metodoPago = resultSet.getString("metodo_pago");
+
+                    // Crear una nueva reserva con los valores obtenidos
+                    Reserva reserva = new Reserva(id, huespedId, fechaIngreso.toLocalDate(), fechaEgreso.toLocalDate(), valorTotal, metodoPago);
+
+                    // Agregar la reserva a la lista
+                    r.add(reserva);
+                }
+            }
+        } catch (SQLException e) {
+            // Lanzar una excepción en caso de que ocurra un error
+            throw new RuntimeException(e);
+        }
+
+        return r;
+    }
+
 }
