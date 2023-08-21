@@ -11,11 +11,13 @@ public class Reserva {
     String metodoPago;
     Reserva() {}
     // Constructor para guardarlos
-    public Reserva(Integer huespedId, LocalDate fechaIngreso, LocalDate fechaEgreso, Double valorTotal, String metodoPago) {
+    public Reserva(Integer huespedId, LocalDate fechaIngreso, LocalDate fechaEgreso, String metodoPago) {
+        int tarifaPorNoche = 100;
+
         this.huespedId = huespedId;
         this.fechaIngreso = fechaIngreso;
         this.fechaEgreso = fechaEgreso;
-        this.valorTotal = valorTotal;
+        this.valorTotal = (double) ((fechaEgreso.getDayOfYear() - fechaIngreso.getDayOfYear()) * tarifaPorNoche);
         this.metodoPago = metodoPago;
     }
     // COnstructor para cuando se recuperan de la base de datos
