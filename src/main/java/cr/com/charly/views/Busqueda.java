@@ -293,14 +293,25 @@ public class Busqueda extends JFrame {
 					// Obtener los datos
 					String nombre = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 1);
 					String apellido = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 2);
-					String fechaNacimiento = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 3);
+					LocalDate fechaNacimiento = (LocalDate) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 3);
 					String nacionalidad = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 4);
 					String telefono = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 5);
 
-					huespedController.modificar(nombre, apellido, LocalDate.parse(fechaNacimiento), nacionalidad, telefono, id);
+					huespedController.modificar(nombre, apellido, fechaNacimiento, nacionalidad, telefono, id);
 				} else {
 					System.out.println("Estamos en la pestaña de reservas");	// debug
 					// TO-DO abrir la ventana de edición de reservas
+					int id = (int) modelo.getValueAt(tbReservas.getSelectedRow(), 0);
+					System.out.println("Se seleccionó la reserva con id " + id);	// debug
+
+					// Obtener los datos (fechaIngreso, fechaEgreso, formaDePago)
+					LocalDate fechaIngreso = (LocalDate) modelo.getValueAt(tbReservas.getSelectedRow(), 1);
+					LocalDate fechaEgreso = (LocalDate) modelo.getValueAt(tbReservas.getSelectedRow(), 2);
+					String formaDePago = (String) modelo.getValueAt(tbReservas.getSelectedRow(), 4);
+
+					System.out.println("Se seleccionó la reserva con fecha de ingreso " + fechaIngreso);	// debug
+
+					reservaController.modificar(fechaIngreso, fechaEgreso, formaDePago, id);
 				}
 			}
 		});
