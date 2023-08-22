@@ -264,6 +264,12 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+				// La noche tiene un costo de 100
+				if (txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null) {
+					long diferencia = txtFechaSalida.getDate().getTime() - txtFechaEntrada.getDate().getTime();
+					int dias = (int) Math.floor(diferencia / (1000 * 60 * 60 * 24));
+					txtValor.setText(String.valueOf(dias * 100));
+				}
 			}
 		});
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
