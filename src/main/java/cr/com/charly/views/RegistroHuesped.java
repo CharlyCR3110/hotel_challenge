@@ -263,6 +263,9 @@ public class RegistroHuesped extends JFrame {
 					reserva.setHuespedId(id);
 					ReservaController reservaController = new ReservaController();
 					reservaController.guardar(reserva);
+					// enviar al usuario un mensaje de confirmación
+					String mensaje2 = "Se ha guardado la reserva con el id: " + reserva.getId() + "\n Presione OK para continuar";
+					JOptionPane.showMessageDialog(null, mensaje2);
 				}
 
 				// Mandarlo al menú principal
