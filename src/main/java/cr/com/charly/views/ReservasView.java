@@ -11,6 +11,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+import cr.com.charly.modelo.Reserva;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -20,6 +22,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
@@ -301,8 +305,20 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped();
+				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
+					// Tomar los valores de los campos y crear una Reserva
+					int huespedId = -1;	// luego se debe de obtener el id del huesped que está logueado
+					LocalDate fechaIngreso = ReservasView.txtFechaEntrada.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					LocalDate fechaEgreso = ReservasView.txtFechaSalida.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					String metodoPago = ReservasView.txtFormaPago.getSelectedItem().toString();
+
+//					if (fechaIngreso.isAfter(fechaEgreso)) {
+//						JOptionPane.showMessageDialog(null, "La fecha de ingreso no puede ser mayor a la fecha de egreso.");
+//						return;
+//					}
+
+
+					RegistroHuesped registro = new RegistroHuesped(new Reserva(huespedId, fechaIngreso, fechaEgreso, metodoPago));
 					registro.setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
