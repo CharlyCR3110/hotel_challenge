@@ -248,7 +248,7 @@ public class RegistroHuesped extends JFrame {
 				int id = huespedController.guardar(huesped);
 
 				if (id == -1) {
-					JOptionPane.showMessageDialog(null, "Parece que el huesped ya esta registrado en el sistema.\n Presione OK para continuar");
+					JOptionPane.showMessageDialog(null, "Bienvenido de nuevo. Gracias por preferirnos");
 					MenuUsuario usuario = new MenuUsuario();
 					usuario.setVisible(true);
 					dispose();
