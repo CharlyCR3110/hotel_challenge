@@ -324,6 +324,7 @@ public class ReservasView extends JFrame {
 					// Se crea el registro de huesped y se muestra la ventana de registro, se le envia la reserva con el fin de que el huesped sea asociado a la reserva
 					RegistroHuesped registro = new RegistroHuesped(new Reserva(huespedId, fechaIngreso, fechaEgreso, metodoPago));
 					registro.setVisible(true);
+					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}
