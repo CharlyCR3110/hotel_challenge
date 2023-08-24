@@ -312,12 +312,16 @@ public class ReservasView extends JFrame {
 					LocalDate fechaEgreso = ReservasView.txtFechaSalida.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					String metodoPago = ReservasView.txtFormaPago.getSelectedItem().toString();
 
-//					if (fechaIngreso.isAfter(fechaEgreso)) {
-//						JOptionPane.showMessageDialog(null, "La fecha de ingreso no puede ser mayor a la fecha de egreso.");
-//						return;
-//					}
+					// Validar que la fecha de ingreso no sea mayor a la fecha de egreso
+					if (fechaIngreso.isAfter(fechaEgreso)) {
+						JOptionPane.showMessageDialog(null, "La fecha de ingreso no puede ser mayor a la fecha de egreso.");
+						ReservasView.txtFechaEntrada.setDate(null);
+						ReservasView.txtFechaSalida.setDate(null);
+						ReservasView.txtValor.setText("");
+						return;
+					}
 
-
+					// Se crea el registro de huesped y se muestra la ventana de registro, se le envia la reserva con el fin de que el huesped sea asociado a la reserva
 					RegistroHuesped registro = new RegistroHuesped(new Reserva(huespedId, fechaIngreso, fechaEgreso, metodoPago));
 					registro.setVisible(true);
 				} else {
