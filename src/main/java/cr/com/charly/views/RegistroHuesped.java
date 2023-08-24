@@ -6,7 +6,9 @@ import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
 import cr.com.charly.controller.HuespedController;
+import cr.com.charly.controller.ReservaController;
 import cr.com.charly.modelo.Huesped;
+import cr.com.charly.modelo.Reserva;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,7 +39,7 @@ public class RegistroHuesped extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistroHuesped frame = new RegistroHuesped();
+					RegistroHuesped frame = new RegistroHuesped(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,8 +51,8 @@ public class RegistroHuesped extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroHuesped() {
-		
+	public RegistroHuesped(Reserva reserva) {	// Una reserva tiene un huesped relacionado, por ende, luego de crear al huesped, ese se le debe de asignar a la reserva
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 634);
@@ -256,6 +258,12 @@ public class RegistroHuesped extends JFrame {
 				// enviar al usuario un mensaje de confirmación
 				String mensaje = "Se ha guardado el huesped con el id: " + id + "\n Presione OK para continuar";
 				JOptionPane.showMessageDialog(null, mensaje);
+
+				if (reserva != null) {
+					reserva.setHuespedId(id);
+					ReservaController reservaController = new ReservaController();
+					reservaController.guardar(reserva);
+				}
 
 				// Mandarlo al menú principal
 				MenuUsuario usuario = new MenuUsuario();
